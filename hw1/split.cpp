@@ -16,13 +16,29 @@ the function below should be the only one in this file.
 
 void split(Node*& in, Node*& odds, Node*& evens)
 {
-  //!! if in is empty add edge cases at the end!!
-
+  //edges cases for empty lists
   if (in == NULL)
   {
-    evens->next = NULL;
-    odds->next = NULL;
-    return;
+    if (odds == NULL && evens == NULL)
+    {
+      return;
+    }
+    else if (evens != NULL && odds == NULL)
+    {
+      evens->next = NULL;
+      return;
+    }
+    else if (odds != NULL && evens == NULL)
+    {
+      odds->next = NULL;
+      return;
+    }
+    else
+    {
+      evens->next = NULL;
+      odds->next = NULL;
+      return;
+    }
   }
 
   //is val even
