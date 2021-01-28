@@ -183,6 +183,47 @@ void ULListStr::push_front(const std::string& val)
 
     size_++;
   }
+}
 
 
+void ULListStr::pop_back()
+{
+  if (head_ == NULL && tail_ == NULL)
+  {
+    cout << "List is emtpy" << endl;
+    return;
+  }
+
+  Item* current = tail_;
+
+  tail_->val[tail->last-1] = NULL;
+  tail_->last--;
+  size_--;
+
+  if (tail_->first == 0 && tail_->last == 0)
+  {
+    tail_->prev->next = NULL;
+    tail_ = tail_->prev;
+
+    delete *current; //?????????????????????
+  }
+
+}
+
+
+void ULListStr::pop_front()
+{
+  Item* current = head_;
+
+  head_->val[first] = NULL;
+  head_->first++;
+  size_--;
+
+  if (head_->first == ARRSIZE && head_->last == ARRSIZE)
+  {
+    head_->next->prev = NULL;
+    head_ = head_->next;
+
+    delete * current; //????????????????
+  }
 }
