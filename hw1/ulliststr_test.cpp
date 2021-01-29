@@ -30,6 +30,7 @@ int main(int argc, char* argv[])
   test_list.push_back("11");//edge case
   test_list.push_back("12");
 
+  //check border and edge cases
   cout << "border and end case: " << test_list.get(9) << " "
   << test_list.get(10) << " " << test_list.get(11) << endl;
 
@@ -37,13 +38,13 @@ int main(int argc, char* argv[])
 
 
   /*
-  TEST SET FUNCTION
+  SET FUNCTION TEST
   */ 
   cout << endl;
   cout << "TESTING SET:" << endl;
   test_list.set(5, "number six");
   test_list.set(9, "number ten");
-  cout << test_list.get(5) << " " << test_list.get(9) >> endl;
+  cout << test_list.get(5) << " " << test_list.get(9) << endl;
 
   test_list.clear(); //clear list
 
@@ -70,15 +71,43 @@ int main(int argc, char* argv[])
   test_list.push_front("10"); //edge case
   test_list.push_front("11"); //edge case
   test_list.push_front("12");
-  cout << test_list.size() << endl; //check size
   
   //check first item and border cases
   cout << "border and edge cases: ";
   cout << test_list.get(0) << " " << test_list.get(9) << " "
   << test_list.get(10) << endl; 
 
+  cout << "final size: " << test_list.size() << endl; //check size
 
+  /*
+  POP_BACK TEST
+  */
   
+  /*test_list.pop_back();
+  cout << "checking if last item still exists:" << endl;
+  if (test_list.get(11) == NULL)
+  {
+    cout << "no item found" << endl;
+  }
+  else
+  {
+    cout << "still there :(" << endl;
+  }*/
+  
+  //cout << "checking size: " << test_list.size() << endl;
+
+  /*
+  POP_FRONT TEST
+  */
+/*
+  test_list.pop_front();
+  cout << "checking if first item still exists:" << endl;
+  cout << test_list.get(0) << endl;
+
+  cout << "checking size: " << test_list.size() << endl;
+  */
+
+
 
   return 0;
 }

@@ -186,7 +186,7 @@ void ULListStr::push_front(const std::string& val)
 }
 
 
-void ULListStr::pop_back()
+/*void ULListStr::pop_back()
 {
   if (head_ == NULL && tail_ == NULL)
   {
@@ -196,7 +196,7 @@ void ULListStr::pop_back()
 
   Item* current = tail_;
 
-  tail_->val[tail->last-1] = NULL;
+  tail_->val[tail_->last-1] = NULL;
   tail_->last--;
   size_--;
 
@@ -208,14 +208,14 @@ void ULListStr::pop_back()
     delete *current; //?????????????????????
   }
 
-}
+}*/
 
 
-void ULListStr::pop_front()
+/*void ULListStr::pop_front()
 {
   Item* current = head_;
 
-  head_->val[first] = NULL;
+  head_->val[head->first] = NULL;
   head_->first++;
   size_--;
 
@@ -226,4 +226,19 @@ void ULListStr::pop_front()
 
     delete * current; //????????????????
   }
+}*/
+
+//finds back most element of tail item
+string const & ULListStr::back() const 
+{
+  return tail_->val[tail_->last-1];
+  
+}
+
+//finds front most element of head item
+std::string const & ULListStr::front() const
+{
+
+  return head_->val[head_->first];
+  
 }
