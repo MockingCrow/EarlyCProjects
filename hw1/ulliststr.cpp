@@ -174,7 +174,7 @@ void ULListStr::pop_back() {
         tail_->prev->next = NULL;
         tail_ = tail_->prev;
 
-        delete current;  //?????????????????????
+        delete current; 
     }
 }
 
@@ -194,7 +194,7 @@ void ULListStr::pop_front() {
         
         head_ = head_->next;
 
-        delete current;  //????????????????
+        delete current;  
     }
 }
 
