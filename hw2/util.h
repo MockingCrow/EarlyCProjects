@@ -12,8 +12,8 @@
 template <typename T>
 std::set<T> setIntersection(std::set<T>& s1, std::set<T>& s2)
 {
-    set<T>::iterator it = s1.begin();
-    set<T> interSet;
+    typename std::set<T>::iterator it = s1.begin();
+    std::set<T> interSet;
 
     for (; it != s1.end(); it++)
     {
@@ -29,8 +29,8 @@ std::set<T> setIntersection(std::set<T>& s1, std::set<T>& s2)
 template <typename T>
 std::set<T> setUnion(std::set<T>& s1, std::set<T>& s2)
 {
-    set<T>::iterator it = s1.begin();
-    set<T> unionSet;
+    typename std::set<T>::iterator it = s1.begin();
+    std::set<T> unionSet;
 
     unionSet.insert(s1.begin(), s1.end());
     unionSet.insert(s2.begin(), s2.end());

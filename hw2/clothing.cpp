@@ -3,6 +3,7 @@
 #include "product.h"
 #include "clothing.h"
 #include <string> 
+#include "util.h"
 
 using namespace std;
 
@@ -27,7 +28,7 @@ set<string> Clothing::keywords()
     tempSet = parseStringToWords(name_);
     keySet.insert(tempSet.begin(), tempSet.end());
     
-    tempSet = parseStringToWords(brand_)
+    tempSet = parseStringToWords(brand_);
     keySet.insert(tempSet.begin(), tempSet.end());
 
     return keySet;

@@ -3,6 +3,7 @@
 #include "product.h"
 #include "book.h"
 #include <string> 
+#include "util.h"
 
 using namespace std;
 
@@ -28,7 +29,7 @@ set<string> Book::keywords()
     tempSet = parseStringToWords(name_);
     keySet.insert(tempSet.begin(), tempSet.end());
     
-    tempSet = parseStringToWords(author_)
+    tempSet = parseStringToWords(author_);
     keySet.insert(tempSet.begin(), tempSet.end());
 
     keySet.insert(isbn_);

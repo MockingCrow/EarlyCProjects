@@ -18,13 +18,11 @@ class MyDataStore: public DataStore {
         std::vector<Product*> search(std::vector<std::string>& terms, int type);
         
         void dump(std::ostream& ofile);
-
-    private:
     /*
     Every keyword for each Product will map to that Product, but there 
     will also be Products with the same keyword, thus the need for a multimap
     */
-        multimap<string, Product*> productList; 
-        map<string, User*> userList;
-        map<string, vector<Product*>> userCarts;
+        std::multimap<std::string, Product*> productList; 
+        std::map<std::string, User*> userList;
+        std::map<std::string, std::vector<Product*>> userCarts;
 };

@@ -5,22 +5,20 @@
 #include <algorithm>
 #include "product.h"
 
-using namespace std;
-
 class Movie: public Product {
     public:
-        Movie(const string category, const string name, double price, int qty, string genre, 
-        string rating);
+        Movie(const std::string category, const std::string name, double price, int qty, std::string genre, 
+        std::string rating);
 
         ~Movie();
 
-        set<string> keywords();
+        std::set<std::string> keywords();
 
-        string displayString();
+        std::string displayString();
 
-        void dump(ostream& os);
+        void dump(std::ostream& os);
         
     private:
-        string genre_;
-        string rating_;
+        std::string genre_;
+        std::string rating_;
 };

@@ -4,12 +4,17 @@
 #include <sstream>
 #include <vector>
 #include <iomanip>
+#include <cmath>
 #include <algorithm>
 #include "product.h"
 #include "db_parser.h"
 #include "product_parser.h"
 #include "util.h"
 #include "MyDataStore.h"
+#include "book.h"
+#include "clothing.h"
+#include "movie.h"
+#include "datastore.h"
 
 using namespace std;
 struct ProdNameSorter {
@@ -107,7 +112,7 @@ int main(int argc, char* argv[])
                 {
                     vector<Product*> cart;
                     map<string, vector<Product*>>::iterator it;
-                    it = userCarts.find(name_);
+                    it = ds.userCarts.find(name_);
                     cart = it->second;
                     displayProducts(cart);
                 }
@@ -124,12 +129,12 @@ int main(int argc, char* argv[])
                         vector<Product*> temp;
 
                         map<string, vector<Product*>>::iterator it;
-                        it = userCarts.find(name_);
+                        it = ds.userCarts.find(name_);
 
-                        if (it != userCart.end())
+                        if (it != ds.userCarts.end())
                         {
                             temp = it->second;
-                            temp.push_back(hits[hitNum-1])
+                            temp.push_back(hits[hitNum-1]);
                             it->second = temp;
                         }
                     }
@@ -141,18 +146,23 @@ int main(int argc, char* argv[])
                 string name_;
                 if (ss >> name_)
                 {
-                    map<string, User*>::iterator it = userList.find(name_);
+                    map<string, User*>::iterator it = ds.userList.find(name_);
                     User* currentUser = it->second;
 
-                    map<string, vector<Product*>>::iterator it1 = userCarts.find(name_);
+                    map<string, vector<Product*>>::iterator it1 = ds.userCarts.find(name_);
                     vector<Product*> currentCart = it1->second;
                     
-                    for (int i = 0; i < currentCart.size(); i++)
+                    double epsilon = .001f;
+                    for (unsigned int i = 0; i < currentCart.size(); i++)
                     {
-                        if(currentUser->balance_ >= currentCart[i])
+                        if(fabs(currentUser->getBalance() - currentCart[i]->getPrice()) > epsilon)
                         {
-                            currentUser->balance_ -= currentCart[i]->price_;
-                            currentCart[i]->qty_--;
+                            if (currentCart[i]->getQty() >= 1)
+                            {
+                                currentUser->deductAmount(currentCart[i]->getPrice());
+                                currentCart[i]->subtractQty(1);
+                            }
+                            
                         }
                         
                     }

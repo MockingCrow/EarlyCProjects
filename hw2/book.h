@@ -5,22 +5,20 @@
 #include <algorithm>
 #include "product.h"
 
-using namespace std;
-
 class Book: public Product {
     public:
-        Book(const string category, const string name, double price, int qty, string isbn, 
-        string author);
+        Book(const std::string category, const std::string name, double price, int qty, std::string isbn, 
+        std::string author);
 
         ~Book();
 
-        set<string> keywords();
+        std::set<std::string> keywords();
 
-        string displayString();
+        std::string displayString();
 
-        void dump(ostream& os);
+        void dump(std::ostream& os);
         
     private:
-        string isbn_;
-        string author_;
+        std::string isbn_;
+        std::string author_;
 };

@@ -3,6 +3,7 @@
 #include "product.h"
 #include "movie.h"
 #include <string> 
+#include "util.h"
 
 using namespace std;
 
@@ -27,7 +28,7 @@ set<string> Movie::keywords()
     tempSet = parseStringToWords(name_);
     keySet.insert(tempSet.begin(), tempSet.end());
     
-    tempSet = parseStringToWords(genre_)
+    tempSet = parseStringToWords(genre_);
     keySet.insert(tempSet.begin(), tempSet.end());
 
     return keySet;
