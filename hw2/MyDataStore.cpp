@@ -18,12 +18,15 @@ void MyDataStore::addProduct(Product* p)
 {
     set<string> temp = p->keywords();
     set<string>::iterator it = temp.begin();
+    
 
     //every keyword for a Product "p" will map to that Product
     for (; it != temp.end(); it++)
     {
         productList.insert(pair<string, Product*>(convToLower(*it), p));
     }
+    noRepeats.insert(p);
+
 }
 
 void MyDataStore::addUser(User* u)
@@ -86,19 +89,24 @@ vector<Product*> MyDataStore::search(vector<string>& terms, int type)
 void MyDataStore::dump(ostream& ofile)
 {
     ofile << "<products>" << endl;
-    multimap<string, Product*>::iterator it;
-    it = productList.begin();
-    for (; it != productList.end(); it++)
+    set<Product*>::iterator it;
+    it = noRepeats.begin();
+
+    for (; it != noRepeats.end(); it++)
     {
-        it->second->dump(ofile);
+        (*it)->dump(ofile);
     }
-    
+
+    ofile << "</products>" << endl;
+    ofile << "<users>" << endl;
+
     map<string, User*>::iterator it1;
     it1 = userList.begin();
     for (; it1 != userList.end(); it1++)
     {
         it1->second->dump(ofile);
     }
+    ofile << "</users>" << endl;
 }
     
     

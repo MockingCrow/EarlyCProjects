@@ -26,4 +26,5 @@ class MyDataStore: public DataStore {
         std::multimap<std::string, Product*> productList; 
         std::map<std::string, User*> userList;
         std::map<std::string, std::deque<Product*>> userCarts;
+        std::set<Product*> noRepeats;
 };
