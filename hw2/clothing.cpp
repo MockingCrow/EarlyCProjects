@@ -20,7 +20,7 @@ Clothing::~Clothing()
 
 }
 
-set<string> Clothing::keywords()
+set<string> Clothing::keywords() const
 {
     set<string> keySet;
     set<string> tempSet;
@@ -34,7 +34,7 @@ set<string> Clothing::keywords()
     return keySet;
 }
 
-string Clothing::displayString()
+string Clothing::displayString() const
 {
     string qtyStr = to_string(qty_);
     string priceStr = to_string(price_);
@@ -56,7 +56,7 @@ string Clothing::displayString()
     return display;
 }
 
-void Clothing::dump(ostream& os)
+void Clothing::dump(ostream& os) const
 {
     os << category_ << endl;
     os << name_ << endl;

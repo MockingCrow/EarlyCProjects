@@ -5,6 +5,7 @@
 #include "product.h"
 #include "user.h"
 #include "datastore.h"
+#include <deque>
 
 class MyDataStore: public DataStore {
     public:
@@ -24,5 +25,5 @@ class MyDataStore: public DataStore {
     */
         std::multimap<std::string, Product*> productList; 
         std::map<std::string, User*> userList;
-        std::map<std::string, std::vector<Product*>> userCarts;
+        std::map<std::string, std::deque<Product*>> userCarts;
 };

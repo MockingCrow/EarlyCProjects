@@ -17,12 +17,14 @@
 #include "datastore.h"
 
 using namespace std;
+
 struct ProdNameSorter {
     bool operator()(Product* p1, Product* p2) {
         return (p1->getName() < p2->getName());
     }
 };
 void displayProducts(vector<Product*>& hits);
+void displayItems(deque<Product*>& cart);
 
 int main(int argc, char* argv[])
 {
@@ -108,13 +110,27 @@ int main(int argc, char* argv[])
             else if (cmd == "VIEWCART")
             {
                 string name_;
+                
                 if (ss >> name_)
                 {
-                    vector<Product*> cart;
-                    map<string, vector<Product*>>::iterator it;
-                    it = ds.userCarts.find(name_);
-                    cart = it->second;
-                    displayProducts(cart);
+                    name_ = convToLower(name_);
+                    map<string, deque<Product*>>::iterator it;
+                    if (ds.userCarts.find(name_) == ds.userCarts.end())
+                    {
+                        cout << "Invalid username" << endl;
+                    }
+                    else
+                    {
+                        it = ds.userCarts.find(name_);
+                        deque<Product*> cart;
+                        cart = it->second;
+                        displayItems(cart);
+                    }
+                    
+                }
+                else
+                {
+                    cout << "Invalid request" << endl;
                 }
                 
                
@@ -124,20 +140,41 @@ int main(int argc, char* argv[])
                 string name_;
                 if (ss >> name_)
                 {
-                    int hitNum;
+                    name_ = convToLower(name_);
+                    unsigned int hitNum;
                     if (ss >> hitNum){
-                        vector<Product*> temp;
+                        deque<Product*> temp;
 
-                        map<string, vector<Product*>>::iterator it;
-                        it = ds.userCarts.find(name_);
-
-                        if (it != ds.userCarts.end())
+                        map<string, deque<Product*>>::iterator it;
+                        if (ds.userCarts.find(name_) == ds.userCarts.end())
                         {
-                            temp = it->second;
-                            temp.push_back(hits[hitNum-1]);
-                            it->second = temp;
+                            cout << "Invalid request" << endl;
                         }
+                        else
+                        {
+                            it = ds.userCarts.find(name_);
+                            temp = it->second;
+                            if (hitNum > hits.size())
+                            {
+                                cout << "Invalid request" << endl;
+                            }
+                            else
+                            {
+                                temp.push_back(hits[hitNum-1]);
+                                it->second = temp;
+                            }
+                            
+                        }
+                        
                     }
+                    else
+                    {
+                        cout << "Invalid request" << endl;
+                    }
+                }
+                else
+                {
+                    cout << "Invalid request" << endl;
                 }
                 
             }
@@ -146,27 +183,41 @@ int main(int argc, char* argv[])
                 string name_;
                 if (ss >> name_)
                 {
-                    map<string, User*>::iterator it = ds.userList.find(name_);
-                    User* currentUser = it->second;
-
-                    map<string, vector<Product*>>::iterator it1 = ds.userCarts.find(name_);
-                    vector<Product*> currentCart = it1->second;
-                    
-                    double epsilon = .001f;
-                    for (unsigned int i = 0; i < currentCart.size(); i++)
+                    if (ds.userList.find(name_) == ds.userList.end())
                     {
-                        if(fabs(currentUser->getBalance() - currentCart[i]->getPrice()) > epsilon)
+                        cout << "Invalid request" << endl;
+                    }
+                    else
+                    {
+                        map<string, User*>::iterator it = ds.userList.find(name_);
+                        User* currentUser = it->second;
+
+                        map<string, deque<Product*>>::iterator it1 = ds.userCarts.find(name_);
+                        deque<Product*> currentCart = it1->second;
+                    
+                        double epsilon = .001f;
+                        for (unsigned int i = 0; i < currentCart.size(); i++)
                         {
-                            if (currentCart[i]->getQty() >= 1)
+                            if(currentUser->getBalance() - currentCart[i]->getPrice() > epsilon)
                             {
-                                currentUser->deductAmount(currentCart[i]->getPrice());
-                                currentCart[i]->subtractQty(1);
-                            }
+                                if (currentCart[i]->getQty() >= 1)
+                                {
+                                    currentUser->deductAmount(currentCart[i]->getPrice());
+                                    currentCart[i]->subtractQty(1);
+                                    it1->second.pop_front();
+                                
+                                }
                             
-                        }
+                            }
                         
+                        }
                     }
                     
+                    
+                }
+                else
+                {
+                    cout << "Invalid request" << endl;
                 }
             }
 
@@ -191,6 +242,22 @@ void displayProducts(vector<Product*>& hits)
     std::sort(hits.begin(), hits.end(), ProdNameSorter());
     for(vector<Product*>::iterator it = hits.begin(); it != hits.end(); ++it) {
         cout << "Hit " << setw(3) << resultNo << endl;
+        cout << (*it)->displayString() << endl;
+        cout << endl;
+        resultNo++;
+    }
+}
+
+void displayItems(deque<Product*>& cart)
+{
+    int resultNo = 1;
+    if (cart.begin() == cart.end()) {
+    	cout << "No results found!" << endl;
+    	return;
+    }
+    //std::sort(hits.begin(), hits.end(), ProdNameSorter());
+    for(deque<Product*>::iterator it = cart.begin(); it != cart.end(); ++it) {
+        cout << "Item " << setw(3) << resultNo << endl;
         cout << (*it)->displayString() << endl;
         cout << endl;
         resultNo++;

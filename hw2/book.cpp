@@ -21,7 +21,7 @@ Book::~Book()
 
 }
 
-set<string> Book::keywords()
+set<string> Book::keywords() const
 {
     set<string> keySet;
     set<string> tempSet;
@@ -37,7 +37,7 @@ set<string> Book::keywords()
     return keySet;
 }
 
-string Book::displayString()
+string Book::displayString() const
 {
     string qtyStr = to_string(qty_);
     string priceStr = to_string(price_);
@@ -59,7 +59,7 @@ string Book::displayString()
     return display;
 }
 
-void Book::dump(ostream& os)
+void Book::dump(ostream& os) const
 {
     os << category_ << endl;
     os << name_ << endl;

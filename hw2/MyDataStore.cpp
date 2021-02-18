@@ -22,38 +22,42 @@ void MyDataStore::addProduct(Product* p)
     //every keyword for a Product "p" will map to that Product
     for (; it != temp.end(); it++)
     {
-        productList.insert(pair<string, Product*>(*it, p));
+        productList.insert(pair<string, Product*>(convToLower(*it), p));
     }
 }
 
 void MyDataStore::addUser(User* u)
 {
     userList.insert(pair<string, User*>(u->getName(), u));
+    deque<Product*> temp;
+    userCarts.insert(pair<string, deque<Product*>>(u->getName(), temp));
 }
 
 vector<Product*> MyDataStore::search(vector<string>& terms, int type)
 {
+
     multimap<string, Product*>::iterator it;
-    it = productList.find(terms[0]);
+    string tempStr = *parseStringToWords(terms[0]).begin();
+    it = productList.find(tempStr);
     std::set<Product*> setTotal; //keeps updating as more products are compared 
     std::set<Product*> setNext; //finds the next set of products to compare to setTotal
     std::vector<Product*> finalVector;
-    int count = 0;
 
-    //populate setTotal for the first time with all Product* they correspond to the first search term
-    for (int i = 0; i < productList.count(terms[0]); i++)
+    //populate setTotal for the first time with all Product* that correspond to the first search term
+    for (unsigned int i = 0; i < productList.count(tempStr); i++)
     {
         setTotal.insert(it->second);
         it++;
     }
 
-    int j = 1;
-    while (count != terms.size())
+    unsigned int j = 1;
+    while (j != terms.size())
     {
-        it = productList.find(terms[j]);
+        tempStr = *parseStringToWords(terms[j]).begin();
+        it = productList.find(tempStr);
         setNext.clear();
         //populate setNext with the Product*(s) that correspond to the next search term
-        for (int i = 0; i < productList.count(terms[j]); i++)
+        for (unsigned int i = 0; i < productList.count(tempStr); i++)
         {   
             setNext.insert(it->second);
             it++;
@@ -68,6 +72,7 @@ vector<Product*> MyDataStore::search(vector<string>& terms, int type)
             setTotal = setUnion(setTotal, setNext);
         }
         j++;
+        
     }
 
     typename set<Product*>::iterator it1 = setTotal.begin();
@@ -76,6 +81,24 @@ vector<Product*> MyDataStore::search(vector<string>& terms, int type)
         finalVector.push_back(*it1);
     }
     return finalVector;
+}
+
+void MyDataStore::dump(ostream& ofile)
+{
+    ofile << "<products>" << endl;
+    multimap<string, Product*>::iterator it;
+    it = productList.begin();
+    for (; it != productList.end(); it++)
+    {
+        it->second->dump(ofile);
+    }
+    
+    map<string, User*>::iterator it1;
+    it1 = userList.begin();
+    for (; it1 != userList.end(); it1++)
+    {
+        it1->second->dump(ofile);
+    }
 }
     
     

@@ -12,11 +12,11 @@ class Book: public Product {
 
         ~Book();
 
-        std::set<std::string> keywords();
+        std::set<std::string> keywords() const;
 
-        std::string displayString();
+        std::string displayString() const;
 
-        void dump(std::ostream& os);
+        void dump(std::ostream& os) const;
         
     private:
         std::string isbn_;

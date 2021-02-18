@@ -20,7 +20,7 @@ Movie::~Movie()
 
 }
 
-set<string> Movie::keywords()
+set<string> Movie::keywords() const
 {
     set<string> keySet;
     set<string> tempSet;
@@ -34,7 +34,7 @@ set<string> Movie::keywords()
     return keySet;
 }
 
-string Movie::displayString()
+string Movie::displayString() const
 {
     string qtyStr = to_string(qty_);
     string priceStr = to_string(price_);
@@ -56,7 +56,7 @@ string Movie::displayString()
     return display;
 }
 
-void Movie::dump(ostream& os)
+void Movie::dump(ostream& os) const
 {
     os << category_ << endl;
     os << name_ << endl;
