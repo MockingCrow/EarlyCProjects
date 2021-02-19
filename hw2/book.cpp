@@ -1,34 +1,28 @@
-#include <sstream>
-#include <iomanip>
-#include "product.h"
 #include "book.h"
-#include <string> 
+
+#include "product.h"
 #include "util.h"
+#include <iomanip>
+#include <sstream>
+#include <string>
 
 using namespace std;
 
-Book::Book(const string category, const string name, double price, int qty, string isbn, 
-    string author): Product(category, name, price, qty)
-{
+Book::Book(const string category, const string name, double price, int qty, string isbn, string author)
+        : Product(category, name, price, qty) {
     isbn_ = isbn;
     author_ = author;
-    
-
 }
 
-Book::~Book()
-{
+Book::~Book() {}
 
-}
-
-set<string> Book::keywords() const
-{
+set<string> Book::keywords() const {
     set<string> keySet;
     set<string> tempSet;
 
     tempSet = parseStringToWords(name_);
     keySet.insert(tempSet.begin(), tempSet.end());
-    
+
     tempSet = parseStringToWords(author_);
     keySet.insert(tempSet.begin(), tempSet.end());
 
@@ -37,14 +31,13 @@ set<string> Book::keywords() const
     return keySet;
 }
 
-string Book::displayString() const
-{
+string Book::displayString() const {
     string qtyStr = to_string(qty_);
     string priceStr = to_string(price_);
-    priceStr.erase(5,5);
+    priceStr.erase(5, 5);
 
     string display = name_;
-  
+
     display.append("\n");
     display.append("Author: ");
     display.append(author_);
@@ -55,12 +48,11 @@ string Book::displayString() const
     display.append(" ");
     display.append(qtyStr);
     display.append(" left.\n");
-    
+
     return display;
 }
 
-void Book::dump(ostream& os) const
-{
+void Book::dump(ostream& os) const {
     os << category_ << endl;
     os << name_ << endl;
     os << price_ << endl;

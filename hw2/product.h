@@ -1,10 +1,10 @@
 #ifndef PRODUCT_H
 #define PRODUCT_H
-#include <iostream>
-#include <string>
-#include <set>
-#include <vector>
 #include <algorithm>
+#include <iostream>
+#include <set>
+#include <string>
+#include <vector>
 
 class Product {
 public:
@@ -44,6 +44,5 @@ protected:
     double price_;
     int qty_;
     std::string category_;
-
 };
 #endif

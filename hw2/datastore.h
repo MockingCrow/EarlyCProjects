@@ -1,10 +1,10 @@
 #ifndef DATASTORE_H
 #define DATASTORE_H
-#include <string>
-#include <set>
-#include <vector>
 #include "product.h"
 #include "user.h"
+#include <set>
+#include <string>
+#include <vector>
 
 /**
  * DataStore Interface needed for parsing and instantiating products and users
@@ -15,10 +15,9 @@
  * DO NOT EDIT
  */
 
-
 class DataStore {
 public:
-    virtual ~DataStore() { }
+    virtual ~DataStore() {}
 
     /**
      * Adds a product to the data store
@@ -41,8 +40,6 @@ public:
      * Reproduce the database file from the current Products and User values
      */
     virtual void dump(std::ostream& ofile) = 0;
-
-
 };
 
 #endif

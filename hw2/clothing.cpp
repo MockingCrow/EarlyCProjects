@@ -1,47 +1,41 @@
-#include <sstream>
-#include <iomanip>
-#include "product.h"
 #include "clothing.h"
-#include <string> 
+
+#include "product.h"
 #include "util.h"
+#include <iomanip>
+#include <sstream>
+#include <string>
 
 using namespace std;
 
-Clothing::Clothing(const string category, const string name, double price, int qty, string size, 
-    string brand): Product(category, name, price, qty)
-{
+Clothing::Clothing(const string category, const string name, double price, int qty, string size, string brand)
+        : Product(category, name, price, qty) {
     size_ = size;
     brand_ = brand;
-
 }
 
-Clothing::~Clothing()
-{
+Clothing::~Clothing() {}
 
-}
-
-set<string> Clothing::keywords() const
-{
+set<string> Clothing::keywords() const {
     set<string> keySet;
     set<string> tempSet;
 
     tempSet = parseStringToWords(name_);
     keySet.insert(tempSet.begin(), tempSet.end());
-    
+
     tempSet = parseStringToWords(brand_);
     keySet.insert(tempSet.begin(), tempSet.end());
 
     return keySet;
 }
 
-string Clothing::displayString() const
-{
+string Clothing::displayString() const {
     string qtyStr = to_string(qty_);
     string priceStr = to_string(price_);
-    priceStr.erase(5,5);
+    priceStr.erase(5, 5);
 
     string display = name_;
-  
+
     display.append("\n");
     display.append("Size: ");
     display.append(size_);
@@ -52,12 +46,11 @@ string Clothing::displayString() const
     display.append(" ");
     display.append(qtyStr);
     display.append(" left.\n");
-    
+
     return display;
 }
 
-void Clothing::dump(ostream& os) const
-{
+void Clothing::dump(ostream& os) const {
     os << category_ << endl;
     os << name_ << endl;
     os << price_ << endl;
