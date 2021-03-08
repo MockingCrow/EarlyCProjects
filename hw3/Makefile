@@ -1,18 +1,18 @@
 CXX=g++
 CXXFLAGS= -g -Wall -std=c++11
 
-OBJS = colorMain.o Color.o
+OBJS = coloring.o Color.o
 
-all: colorMain
+all: coloring
 
-colorMain: $(OBJS)
+coloring: $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
 
-colorMain.o: colorMain.cpp Color.h
-	$(CXX) $(CXXFLAGS) -o $@ -c colorMain.cpp
+coloring.o: coloring.cpp Color.h
+	$(CXX) $(CXXFLAGS) -o $@ -c coloring.cpp
 
 Color.o: Color.cpp Color.h
 	$(CXX) $(CXXFLAGS) -o $@ -c Color.cpp
 
 clean:
-	rm -f *.o colorMain
+	rm -f *.o coloring
