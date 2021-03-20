@@ -359,6 +359,7 @@ BinarySearchTree<Key, Value>::iterator::operator++()
         temp = temp->getParent();
         current_ = temp;
     }
+    return *this;
 }
 
 
@@ -450,7 +451,9 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
 {
     if (root_ == NULL)
     {
-        root_ = keyValuePair;
+        //Node<Key,Value> *ptr = NULL;
+        Node<Key,Value> temp = Node<Key,Value>(keyValuePair.first, keyValuePair.second, NULL);
+        root_ = &temp;
     }
     else
     {
@@ -465,7 +468,8 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
                 }
                 else
                 {
-                    curr->getLeft() = keyValuePair;
+                    Node<Key,Value> temp = Node<Key,Value>(keyValuePair.first, keyValuePair.second, curr);
+                    curr->setLeft(&temp);
                 }
                 
             }
@@ -477,7 +481,8 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
                 }
                 else
                 {
-                    curr->getRight() = keyValuePair;
+                    Node<Key,Value> temp = Node<Key,Value>(keyValuePair.first, keyValuePair.second, curr);
+                    curr->setRight(&temp);
                 }
             }
         }
@@ -500,11 +505,11 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
     {
         if (curr->getParent()->getRight() == curr)
         {
-            curr->getParent()->getRight() = NULL;
+            curr->getParent()->setRight(NULL);
         }
         else
         {
-            curr->getParent()->getLeft() = NULL;
+            curr->getParent()->setLeft(NULL);
         }
         if (curr == root_)
         {
@@ -520,17 +525,17 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
     {
         if (curr->getParent() == NULL) // if no parent
         {
-            curr->getRight()->getParent() = NULL;
+            curr->getRight()->setParent(NULL);
         }
         else if (curr->getKey() > curr->getParent()->getKey()) //when the to be removed node is the right child of its parent
         {
-            curr->getParent()->getRight() = curr->getRight();
-            curr->getRight()->getParent() = curr->getParent();
+            curr->getParent()->setRight(curr->getRight());
+            curr->getRight()->setParent(curr->getParent());
         }
         else if (curr->getKey() < curr->getParent()->getKey()) //when the to be removed node is the left child of its parent
         {
-            curr->getParent()->getleft() = curr->getRight();
-            curr->getRight()->getParent() = curr->getParent();
+            curr->getParent()->setLeft(curr->getRight());
+            curr->getRight()->setParent(curr->getParent());
         }
         delete curr;
     }
@@ -539,17 +544,17 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
     {
         if (curr->getParent() == NULL) // if no parent
         {
-            curr->getLeft()->getParent() = NULL;
+            curr->getLeft()->setParent(NULL);
         }
         else if (curr->getKey() > curr->getParent()->getKey())
         {
-            curr->getParent()->getRight() = curr->getLeft();
-            curr->getLeft()->getParent() = curr->getParent();
+            curr->getParent()->setRight(curr->getLeft());
+            curr->getLeft()->setParent(curr->getParent());
         }
         else if (curr->getKey() < curr->getParent()->getKey())
         {
-            curr->getParent()->getLeft() = curr->getLeft();
-            curr->getLeft()->getParent() = curr->getParent();
+            curr->getParent()->setLeft(curr->getLeft());
+            curr->getLeft()->setParent(curr->getParent());
         }
         delete curr;
     }

@@ -16,9 +16,10 @@ int main()
     tree.insert(pair<int, string>(1,"testing"));
     tree.insert(pair<int, string>(8,"resting"));
 
-    BinarySearchTree<int,string>::iterator it = tree.find(6); 
-    Node<int, string> *ptr = it.current_;
-    printRoot(ptr);
+    //BinarySearchTree<int,string>::iterator it = tree.find(6); 
+    //Node<int, string> *ptr = it->(); WHAT DO 
+    
+    //printRoot(ptr);
 
     return 0;
 }
