@@ -458,11 +458,11 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
     else
     {
         Node<Key,Value> *curr = root_;
-        while(keyValuePair.first < curr->getKey() || keyValuePair.first > curr->getKey())
+        while(keyValuePair.first < curr->getKey() || keyValuePair.first > curr->getKey()) //while the keyPair is not in the right place
         {
-            if (keyValuePair.first < curr->getKey())
+            if (keyValuePair.first < curr->getKey()) //if the key is less 
             {
-                if (curr->getLeft()!= NULL)
+                if (curr->getLeft()!= NULL) //if there is no vacant spot check the next node
                 {
                     curr = curr->getLeft();
                 }
@@ -475,7 +475,7 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
             }
             else if (keyValuePair.first > curr->getKey())
             {
-                if (curr->getRight() != NULL)
+                if (curr->getRight() != NULL) //if there is no vacant spot check the next node
                 {
                     curr = curr->getRight();
                 }
@@ -484,7 +484,15 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
                     Node<Key,Value> temp = Node<Key,Value>(keyValuePair.first, keyValuePair.second, curr);
                     curr->setRight(&temp);
                 }
-            }
+            } 
+        }
+        if (curr->getKey() == keyValuePair.first) //if they are equal replace the old val with the new one
+        {
+            Node<Key,Value> temp = Node<Key,Value>(keyValuePair.first, keyValuePair.second, curr);
+            temp.setLeft(curr->getLeft());
+            temp.setRight(curr->getRight());
+            temp.setParent(curr->getParent());
+            delete curr; //does this delete the pointer or the actual item should i do delete *curr
         }
     }
 
@@ -598,7 +606,7 @@ void BinarySearchTree<Key, Value>::clear()
         Node<Key,Value> *ptr = getSmallestNode();
         while(ptr != NULL)
         {
-            remove(ptr);
+            remove(ptr->getKey());
             ptr = getSmallestNode();
         }
     }
@@ -663,7 +671,7 @@ bool BinarySearchTree<Key, Value>::isBalanced() const
     Node<Key,Value> rtemp = root_->getRight();
     //TODO
 
-    
+    return false;
     
 }
 
