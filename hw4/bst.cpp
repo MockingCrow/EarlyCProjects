@@ -15,11 +15,9 @@ int main()
     tree.insert(pair<int, string>(2,"hehe"));
     tree.insert(pair<int, string>(1,"testing"));
     tree.insert(pair<int, string>(8,"resting"));
+    tree.remove(6);
 
-    //BinarySearchTree<int,string>::iterator it = tree.find(6); 
-    //Node<int, string> *ptr = it->(); WHAT DO 
-    
-    //printRoot(ptr);
+    tree.print();
 
     return 0;
 }

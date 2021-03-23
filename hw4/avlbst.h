@@ -131,16 +131,17 @@ protected:
     void rotateRight(AVLNode<Key,Value>* n1);
     bool isLeftChild(AVLNode<Key,Value>* n1);
     bool isRightChild(AVLNode<Key,Value>* n1);
-    int height(AVLNode<Key,Value>* n1);
-    void balanceTree(AVLNode<Key,Value>* n1); //call this on the node that was inserted or the parent of the node that was
-                                              //just removed. Will go up tree and fix height.
+    int calcHeight(AVLNode<Key,Value>* n1);
+    void checkBalance(AVLNode<Key,Value>* n1); //call this on the node that was inserted or the parent of the node that was
+                                              
 };
 
 template<class Key, class Value>
 void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
 {
-    BinarySearchTree<Key,Value>::insert(new_item);
-    BinarySearchTree<Key,Value>::iterator it;
+    BinarySearchTree<Key,Value>::insert(new_item); //do bst insert first
+
+    typename BinarySearchTree<Key,Value>::iterator it;
     it = BinarySearchTree<Key,Value>::find(new_item.first);
     AVLNode<Key,Value> *curr = it->current_;
     AVLNode<Key,Value>* rootPtr; //this will keep track of which node is the root
@@ -200,7 +201,53 @@ void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
 template<class Key, class Value>
 void AVLTree<Key, Value>:: remove(const Key& key)
 {
-    // TODO
+    BinarySearchTree<Key,Value>::remove(key);
+
+    calcHeight(this->root_);
+    AVLNode<Key,Value> curr;
+    AVLNode<Key,Value> rootPtr;
+    curr = checkBalance(this->root_);
+
+    if (curr != NULL) 
+    {
+        if (curr->getLeft()->height_ > curr->getRight->height_) //if left side of tree
+        {
+            curr = curr->getLeft();
+            if (curr->getLeft()->height_ >= curr->getRight()->height_) //zig zig
+            {
+                rotateRight(curr->getParent());
+                rootPtr = curr;
+            }
+            else //zig zag
+            {
+                AVLNode<Key,Value>* currP = curr->getParent();
+                rootPtr = curr->getRight();
+                rotateLeft(curr);
+                rotateRight(currP);
+            }
+        }
+        else
+        {
+            if (curr->getRight()->height_ > curr->getleft()->height_) //if right side of tree
+            {
+                curr = curr->getRight();
+                if (curr->getRight()->height_ >= curr->getLeft()->height_)//zig zig
+                {
+                    rotateLeft(curr->getParent());
+                    rootPtr = curr;
+                }
+                else //zig zag
+                {
+                    AVLNode<Key,Value>* currP = curr->getParent();
+                    rootPtr = curr->getLeft();
+                    rotateRight(curr);
+                    rotateLeft(currP);
+                }
+            }
+        }
+        this->root_ = rootPtr; //update root
+        calcHeight(rootPtr); //update heights
+    }
 }
 
 template<class Key, class Value>
@@ -257,6 +304,7 @@ bool isRightChild(AVLNode<Key,Value>* n1)
 }
 
 //recursively recalculates the heights for all the nodes up to and including n1
+template<class Key, class Value>
 int calcHeight(AVLNode<Key,Value>* n1)
 {
     if (n1 == NULL)
@@ -270,6 +318,7 @@ int calcHeight(AVLNode<Key,Value>* n1)
 
 /*recursively checks balance of all nodes below and including n1
 when an unbalanced node is found that node is returned */
+template<class Key, class Value>
 AVLNode<Key,Value>* checkBalance(AVLNode<Key,Value>* n1)
 {
     if (n1 == NULL)
