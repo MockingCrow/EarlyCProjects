@@ -15,7 +15,9 @@ int main()
     tree.insert(pair<int, string>(2,"hehe"));
     tree.insert(pair<int, string>(1,"testing"));
     tree.insert(pair<int, string>(8,"resting"));
-    tree.remove(6);
+    tree.remove(1);
+    tree.remove(2);
+    tree.remove(10);
 
     tree.print();
 
