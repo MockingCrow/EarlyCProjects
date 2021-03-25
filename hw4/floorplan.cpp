@@ -72,9 +72,6 @@ void flip(int x1, int y1, const Rectangle& r, vector<vector<bool> >& grid)
 
 bool isValid(int x, int y, int length, int height, vector<vector<bool>> grid)
 {
-    cout << x << endl;
-    cout << y << endl;
-    cout << endl;
     for (int i = x; i < x+length; i++)
     {
         for (int j = y; j < y+height; j++)
@@ -93,35 +90,42 @@ InputMapType::iterator it, InputMapType::iterator it1)
 {
     if (it == it1)
     {
-        cout << "end case" << endl;
         return true;
     }
     
-    for (int i = 0; i <= n - it->second.length; i++)
+    int i;
+    int j;
+    for (i = 0; i < n; i++)
     {
-        for (int j = 0; j <= m - it->second.height; j++)
+        for (j = 0; j < m; j++)
         {
-            
-            if (isValid(i, j, it->second.length, it->second.height, grid))
+            if (((j + it->second.height) <= m) && ((i + it->second.length) <= n))
             {
-                cout << "such" << endl;
-                flip(i, j, it->second, grid);
-                
-                if (search(input, output, grid, ++it, it1) == true)
+                if (isValid(i, j, it->second.length, it->second.height, grid))
                 {
-                    return true;
+        
+                    flip(i, j, it->second, grid);
+                    if (search(input, output, grid, ++it, it1) == true)
+                    {
+                        output.insert(make_pair(it->second.ID, make_pair(i, j)));
+                        return true;
+                    }
                 }
             }
-            else if (isValid(i, j, it->second.height, it->second.length, grid))
+            swap(it->second.height, it->second.length);
+            if (((j + it->second.height) <= m) && ((i + it->second.length) <= n))
             {
-                cout << "such" << endl;
-                swap(it->second.height, it->second.length); 
-                flip(i, j, it->second, grid);
-                if (search(input, output, grid, ++it, it1) == true)
+                if (isValid(i, j, it->second.length, it->second.height, grid))
                 {
-                    return true;
+                    flip(i, j, it->second, grid);
+                    if (search(input, output, grid, ++it, it1) == true)
+                    { 
+                        output.insert(make_pair(it->second.ID, make_pair(i, j)));
+                        return true;
+                    }
                 }
             }
+            swap(it->second.height, it->second.length);
         }
     }
     return false;
@@ -176,6 +180,7 @@ int main(int argc, char *argv[])
         ofile << "No solution found.";
     }
     else {
+        cout << "SOLUTION" << endl;
         printSolution(ofile, input, output);
     }
     ofile.close();
