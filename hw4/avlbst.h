@@ -129,9 +129,8 @@ protected:
     // Add helper functions here
     void rotateLeft(AVLNode<Key,Value>* n1);
     void rotateRight(AVLNode<Key,Value>* n1);
-    bool isLeftChild(AVLNode<Key,Value>* n1);
-    bool isRightChild(AVLNode<Key,Value>* n1);
     int calcHeight(Node<Key,Value>* n1);
+    void fixBalance(Node<Key,Value>* curr);
     Node<Key,Value>* checkBalance(Node<Key,Value>* n1); //call this on the node that was inserted or the parent of the node that was
                                               
 };
@@ -139,116 +138,76 @@ protected:
 template<class Key, class Value>
 void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
 {
-    Node<Key,Value>* curr;
-    Node<Key,Value>* rootPtr = NULL;
     
-    BinarySearchTree<Key,Value>::insert(new_item); //do bst insert first
-    
-    calcHeight(static_cast<AVLNode<Key,Value>*>(this->root_));
-    
-    curr = checkBalance(static_cast<AVLNode<Key,Value>*>(this->root_)); //returns a NULL ptr if balanced
-
-    if (curr != NULL) 
-    {
-        if (static_cast<AVLNode<Key,Value>*>(curr)->getLeft()->getHeight() > 
-            static_cast<AVLNode<Key,Value>*>(curr)->getRight()->getHeight()) //if left side of tree
-        {
-            curr = curr->getLeft();
-            if (static_cast<AVLNode<Key,Value>*>(curr)->getLeft()->getHeight() >= 
-                static_cast<AVLNode<Key,Value>*>(curr)->getRight()->getHeight()) //zig zig, prefer zig zig over zig zag
-            {
-                rotateRight(static_cast<AVLNode<Key,Value>*>(curr->getParent()));
-                rootPtr = curr;
-            }
-            else //zig zag
-            {
-                Node<Key,Value>* currP = curr->getParent();
-                rootPtr = curr->getRight();
-                rotateLeft(static_cast<AVLNode<Key,Value>*>(curr));
-                rotateRight(static_cast<AVLNode<Key,Value>*>(currP));
-            }
-        }
-        else
-        {
-            if (static_cast<AVLNode<Key,Value>*>(curr)->getRight()->getHeight() > 
-                static_cast<AVLNode<Key,Value>*>(curr)->getLeft()->getHeight()) //if right side of tree
-            {
-                curr = curr->getRight();
-                if (static_cast<AVLNode<Key,Value>*>(curr)->getRight()->getHeight() >= 
-                    static_cast<AVLNode<Key,Value>*>(curr)->getLeft()->getHeight())//zig zig, prefer zig zig over zig zag
-                {
-                    rotateLeft(static_cast<AVLNode<Key,Value>*>(curr->getParent()));
-                    rootPtr = curr;
-                }
-                else //zig zag
-                {
-                    Node<Key,Value>* currP = curr->getParent();
-                    rootPtr = curr->getLeft();
-                    rotateRight(static_cast<AVLNode<Key,Value>*>(curr));
-                    rotateLeft(static_cast<AVLNode<Key,Value>*>(currP));
-                }
-            }
-        }
-        this->root_ = rootPtr; //update root
-        calcHeight(static_cast<AVLNode<Key,Value>*>(rootPtr)); //update heights
+    if (this->root_ == NULL)
+    { 
+        AVLNode<Key,Value>* temp =  new AVLNode<Key,Value>(new_item.first, new_item.second, NULL);
+        this->root_ = temp;
     }
-    
+    else
+    {
+        AVLNode<Key,Value> *curr = static_cast<AVLNode<Key,Value>*>(this->root_);
+        while(new_item.first < curr->getKey() || new_item.first > curr->getKey()) //while the keyPair is not in the right place
+        {
+            if (new_item.first < curr->getKey()) //if the key is less 
+            {
+                if (curr->getLeft() != NULL) //if there is no vacant spot check the next node
+                {
+                    curr = curr->getLeft();
+                }
+                else
+                {
+                    AVLNode<Key,Value>* temp =  new AVLNode<Key,Value>(new_item.first, new_item.second, NULL);
+                    curr->setLeft(temp);
+                    curr->getLeft()->setParent(curr);
+                    break;
+                }
+                
+            }
+            else if (new_item.first > curr->getKey())
+            {
+                if (curr->getRight() != NULL) //if there is no vacant spot check the next node
+                {
+                    curr = curr->getRight();
+                }
+                else
+                {
+                    AVLNode<Key,Value>* temp =  new AVLNode<Key,Value>(new_item.first, new_item.second, NULL);
+                    curr->setRight(temp);
+                    curr->getRight()->setParent(curr);
+                    break;
+                }
+            } 
+            else if (curr->getKey() == new_item.first) //if they are equal replace the old val with the new one
+            {
+                AVLNode<Key,Value> temp = AVLNode<Key,Value>(new_item.first, new_item.second, curr);
+                temp.setLeft(curr->getLeft());
+                temp.setRight(curr->getRight());
+                temp.setParent(curr->getParent());
+                delete curr;
+                break;
+            }
+        }
+    }
+
+    calcHeight(static_cast<AVLNode<Key,Value>*>(this->root_));
+    Node<Key,Value>* ptr;
+    ptr = checkBalance(this->root_); //returns a NULL ptr if balanced
+    if (ptr != NULL)
+    {
+        fixBalance(ptr);
+    }
 }
 
 template<class Key, class Value>
 void AVLTree<Key, Value>:: remove(const Key& key)
 {
     BinarySearchTree<Key,Value>::remove(key);
-
     calcHeight(static_cast<AVLNode<Key,Value>*>(this->root_));
+    
     Node<Key,Value>* curr;
-    Node<Key,Value>* rootPtr = NULL;
     curr = checkBalance(static_cast<AVLNode<Key,Value>*>(this->root_));
-
-    if (curr != NULL) 
-    {
-        if (static_cast<AVLNode<Key,Value>*>(curr)->getLeft()->getHeight() > 
-            static_cast<AVLNode<Key,Value>*>(curr)->getRight()->getHeight()) //if left side of tree
-        {
-            curr = curr->getLeft();
-            if (static_cast<AVLNode<Key,Value>*>(curr)->getLeft()->getHeight() >= 
-               static_cast<AVLNode<Key,Value>*>(curr)->getRight()->getHeight()) //zig zig
-            {
-                rotateRight(static_cast<AVLNode<Key,Value>*>(curr->getParent()));
-                rootPtr = curr;
-            }
-            else //zig zag
-            {
-                Node<Key,Value>* currP = curr->getParent();
-                rootPtr = curr->getRight();
-                rotateLeft(static_cast<AVLNode<Key,Value>*>(curr));
-                rotateRight(static_cast<AVLNode<Key,Value>*>(currP));
-            }
-        }
-        else
-        {
-            if (static_cast<AVLNode<Key,Value>*>(curr)->getRight()->getHeight() > 
-                static_cast<AVLNode<Key,Value>*>(curr)->getLeft()->getHeight()) //if right side of tree
-            {
-                curr = curr->getRight();
-                if (static_cast<AVLNode<Key,Value>*>(curr)->getRight()->getHeight() >= 
-                    static_cast<AVLNode<Key,Value>*>(curr)->getLeft()->getHeight())//zig zig
-                {
-                    rotateLeft(static_cast<AVLNode<Key,Value>*>(curr->getParent()));
-                    rootPtr = curr;
-                }
-                else //zig zag
-                {
-                    Node<Key,Value>* currP = curr->getParent();
-                    rootPtr = curr->getLeft();
-                    rotateRight(static_cast<AVLNode<Key,Value>*>(curr));
-                    rotateLeft(static_cast<AVLNode<Key,Value>*>(currP));
-                }
-            }
-        }
-        this->root_ = rootPtr; //update root
-        calcHeight(static_cast<AVLNode<Key,Value>*>(rootPtr)); //update heights
-    }
+    fixBalance(curr);
 }
 
 template<class Key, class Value>
@@ -267,6 +226,8 @@ void AVLTree<Key, Value>::rotateLeft(AVLNode<Key,Value>* n1)
     temp = n1->getRight();
     n1->setRight(temp->getLeft());
     temp->setLeft(n1);
+    temp->setParent(NULL);
+    n1->setParent(temp);
 }
 
 template<class Key, class Value>
@@ -276,6 +237,8 @@ void AVLTree<Key, Value>::rotateRight(AVLNode<Key,Value>* n1)
     temp = n1->getLeft();
     n1->setLeft(temp->getRight());
     temp->setRight(n1);
+    temp->setParent(NULL);
+    n1->setParent(temp);
 }
 
 //recursively recalculates the heights for all the nodes up to and including n1
@@ -286,9 +249,10 @@ int AVLTree<Key, Value>::calcHeight(Node<Key,Value>* n1)
     {
         return 0;
     }
-    static_cast<AVLNode<Key,Value>*>(n1)->
-    setHeight(1 + std::max(calcHeight(static_cast<AVLNode<Key,Value>*>(n1)->getLeft()), 
+    static_cast<AVLNode<Key,Value>*>(n1)->setHeight(1 + 
+    std::max(calcHeight(static_cast<AVLNode<Key,Value>*>(n1)->getLeft()), 
     calcHeight(static_cast<AVLNode<Key,Value>*>(n1)->getRight())));
+
     return static_cast<AVLNode<Key,Value>*>(n1)->getHeight();
 }
 
@@ -326,6 +290,121 @@ Node<Key,Value>* AVLTree<Key, Value>::checkBalance(Node<Key,Value>* n1)
         checkBalance(n1->getRight());
     }
     return NULL;  
+}
+
+template<class Key, class Value>
+void AVLTree<Key,Value>::fixBalance(Node<Key,Value>* curr)
+{
+    Node<Key,Value>* rootPtr;
+    if (curr != NULL) 
+    {
+        int heightR;
+        int heightL;
+        if (curr->getRight() != NULL)
+        {
+            heightR = static_cast<AVLNode<Key,Value>*>(curr)->getRight()->getHeight();
+        }
+        else
+        {
+            heightR = 0;
+        }
+        if (curr->getLeft() != NULL)
+        {
+            heightL = static_cast<AVLNode<Key,Value>*>(curr)->getLeft()->getHeight();
+        }
+        else
+        {
+            heightL = 0;
+        }
+
+        if (heightL > heightR) //if left side of tree
+        {
+            curr = curr->getLeft();
+            if (curr->getRight() != NULL)
+            {
+                heightR = static_cast<AVLNode<Key,Value>*>(curr)->getRight()->getHeight();
+            }
+            else
+            {
+                heightR = 0L;
+            }
+            if (curr->getLeft() != NULL)
+            {
+                heightL = static_cast<AVLNode<Key,Value>*>(curr)->getLeft()->getHeight();
+            }
+            else
+            {
+                heightL = 0;
+            }
+
+            if (heightL >= heightR) //zig zig
+            {
+                rotateRight(static_cast<AVLNode<Key,Value>*>(curr->getParent()));
+                rootPtr = curr;
+            }
+            else //zig zag
+            {
+                Node<Key,Value>* currP = curr->getParent();
+                rootPtr = curr->getRight();
+                rotateLeft(static_cast<AVLNode<Key,Value>*>(curr));
+                rotateRight(static_cast<AVLNode<Key,Value>*>(currP));
+            }
+        }
+        else
+        {
+            if (curr->getRight() != NULL)
+            {
+                heightR = static_cast<AVLNode<Key,Value>*>(curr)->getRight()->getHeight();
+            }
+            else
+            {
+                heightR = 0;
+            }
+            if (curr->getLeft() != NULL)
+            {
+                heightL = static_cast<AVLNode<Key,Value>*>(curr)->getLeft()->getHeight();
+            }
+            else
+            {
+                heightL = 0;
+            }
+            if (heightR > heightL) //if right side of tree
+            {
+                curr = curr->getRight();
+                if (curr->getRight() != NULL)
+                {
+                    heightR = static_cast<AVLNode<Key,Value>*>(curr)->getRight()->getHeight();
+                }
+                else
+                {
+                    heightR = 0;
+                }
+                if (curr->getLeft() != NULL)
+                {
+                    heightL = static_cast<AVLNode<Key,Value>*>(curr)->getLeft()->getHeight();
+                }
+                else
+                {
+                    heightL = 0;
+                }
+                
+                if (heightR >= heightL)//zig zig
+                {
+                    rotateLeft(static_cast<AVLNode<Key,Value>*>(curr->getParent()));
+                    rootPtr = curr;
+                }
+                else //zig zag
+                {
+                    Node<Key,Value>* currP = curr->getParent();
+                    rootPtr = curr->getLeft();
+                    rotateRight(static_cast<AVLNode<Key,Value>*>(curr));
+                    rotateLeft(static_cast<AVLNode<Key,Value>*>(currP));
+                }
+            }
+        }
+        this->root_ = rootPtr; //update root
+        calcHeight(static_cast<AVLNode<Key,Value>*>(this->root_)); //update heights
+    }
 }
 
 #endif

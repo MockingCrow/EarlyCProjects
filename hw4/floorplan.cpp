@@ -85,7 +85,7 @@ bool isValid(int x, int y, int length, int height, vector<vector<bool>> grid)
     return true;
 }
 
-bool search(InputMapType input, OutputMapType output,  vector<vector<bool> > grid, 
+bool search(InputMapType input, OutputMapType& output,  vector<vector<bool> > grid, 
 InputMapType::iterator it, InputMapType::iterator it1)
 {
     if (it == it1)
@@ -103,9 +103,11 @@ InputMapType::iterator it, InputMapType::iterator it1)
             {
                 if (isValid(i, j, it->second.length, it->second.height, grid))
                 {
-        
+                    
                     flip(i, j, it->second, grid);
-                    if (search(input, output, grid, ++it, it1) == true)
+                    InputMapType::iterator it2 = it;
+                    ++it2;
+                    if (search(input, output, grid, it2, it1) == true)
                     {
                         output.insert(make_pair(it->second.ID, make_pair(i, j)));
                         return true;
@@ -118,7 +120,9 @@ InputMapType::iterator it, InputMapType::iterator it1)
                 if (isValid(i, j, it->second.length, it->second.height, grid))
                 {
                     flip(i, j, it->second, grid);
-                    if (search(input, output, grid, ++it, it1) == true)
+                    InputMapType::iterator it2 = it;
+                    ++it2;
+                    if (search(input, output, grid, it2, it1) == true)
                     { 
                         output.insert(make_pair(it->second.ID, make_pair(i, j)));
                         return true;

@@ -507,18 +507,16 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
                     break;
                 }
             } 
-            
-        }
-        if (curr->getKey() == keyValuePair.first) //if they are equal replace the old val with the new one
-        {
-            Node<Key,Value> temp = Node<Key,Value>(keyValuePair.first, keyValuePair.second, curr);
-            temp.setLeft(curr->getLeft());
-            temp.setRight(curr->getRight());
-            temp.setParent(curr->getParent());
-            delete curr; //does this delete the pointer or the actual item should i do delete *curr*/
+            else if (curr->getKey() == keyValuePair.first) //if they are equal replace the old val with the new one
+            {
+                Node<Key,Value> temp = Node<Key,Value>(keyValuePair.first, keyValuePair.second, curr);
+                temp.setLeft(curr->getLeft());
+                temp.setRight(curr->getRight());
+                temp.setParent(curr->getParent());
+                delete curr; //does this delete the pointer or the actual item should i do delete *curr*/
+            }
         }
     }
-
 }
 
 
@@ -538,7 +536,10 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
 
     if (curr->getRight() != NULL && curr->getLeft() != NULL)
     {
-        nodeSwap(curr, predecessor(curr));
+        if (predecessor(curr) != NULL)
+        {
+            nodeSwap(curr, predecessor(curr));
+        }
     }
 
     if (curr->getLeft() == NULL && curr->getRight() == NULL)
@@ -610,9 +611,12 @@ BinarySearchTree<Key, Value>::predecessor(Node<Key, Value>* current)
         {
             predecessor = predecessor->getRight();
         }
+        return predecessor;
     }
-    
-    return predecessor;
+    else
+    {
+        return current->getParent();
+    }
 }
 
 
