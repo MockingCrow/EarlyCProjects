@@ -225,6 +225,10 @@ void AVLTree<Key, Value>::rotateLeft(AVLNode<Key,Value>* n1)
     AVLNode<Key,Value>* temp;
     temp = n1->getRight();
     n1->setRight(temp->getLeft());
+    if (temp->getLeft() != NULL)
+    {
+        temp->getLeft()->setParent(n1);
+    }
     temp->setLeft(n1);
     temp->setParent(NULL);
     n1->setParent(temp);
@@ -236,6 +240,10 @@ void AVLTree<Key, Value>::rotateRight(AVLNode<Key,Value>* n1)
     AVLNode<Key,Value>* temp;
     temp = n1->getLeft();
     n1->setLeft(temp->getRight());
+    if (temp->getRight() != NULL)
+    {
+        temp->getRight()->setParent(n1);
+    }
     temp->setRight(n1);
     temp->setParent(NULL);
     n1->setParent(temp);
@@ -347,7 +355,11 @@ void AVLTree<Key,Value>::fixBalance(Node<Key,Value>* curr)
                 Node<Key,Value>* currP = curr->getParent();
                 rootPtr = curr->getRight();
                 rotateLeft(static_cast<AVLNode<Key,Value>*>(curr));
+                curr->getParent()->setParent(currP);
+                currP->setLeft(curr->getParent());
                 rotateRight(static_cast<AVLNode<Key,Value>*>(currP));
+                
+                this->root_ = curr->getParent();
             }
         }
         else
