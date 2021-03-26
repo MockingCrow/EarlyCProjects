@@ -242,6 +242,8 @@ protected:
     virtual void nodeSwap( Node<Key,Value>* n1, Node<Key,Value>* n2);
 
     // Add helper functions here
+    int findHeight(Node<Key,Value>* ptr) const;
+    bool balance(Node<Key,Value>* ptr) const;
 
 
 protected:
@@ -695,11 +697,44 @@ Node<Key, Value>* BinarySearchTree<Key, Value>::internalFind(const Key& key) con
 template<typename Key, typename Value>
 bool BinarySearchTree<Key, Value>::isBalanced() const
 {
-    Node<Key,Value> ltemp = root_->getLeft();
-    Node<Key,Value> rtemp = root_->getRight();
-    //TODO
+    if (balance(root_))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
+template<typename Key, typename Value>
+bool BinarySearchTree<Key,Value>::balance(Node<Key,Value>* ptr) const
+{
+    if (ptr == NULL)
+    {
+        return true;
+    }
+    
+    int heightL = findHeight(ptr->getLeft());
+    int heightR = findHeight(ptr->getRight());
+    if (abs(heightL-heightR) <= 1)
+    {   
+        if(balance(ptr->getRight()) == true && balance(ptr->getLeft()) == true)
+        {
+            return true;
+        }
+    }
     return false;
+}
+
+template <typename Key, typename Value>
+int BinarySearchTree<Key,Value>::findHeight(Node<Key,Value>* ptr) const
+{
+    if (ptr == NULL)
+    {
+        return 0;
+    }
+    return 1 + std::max(findHeight(ptr->getLeft()), findHeight(ptr->getRight()));
 }
 
 

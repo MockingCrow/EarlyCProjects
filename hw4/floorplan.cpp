@@ -184,7 +184,6 @@ int main(int argc, char *argv[])
         ofile << "No solution found.";
     }
     else {
-        cout << "SOLUTION" << endl;
         printSolution(ofile, input, output);
     }
     ofile.close();
