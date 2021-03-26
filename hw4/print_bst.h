@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <cstdint>
+#include "bst.h"
 
 #ifndef PRINT_BST_H
 #define PRINT_BST_H
