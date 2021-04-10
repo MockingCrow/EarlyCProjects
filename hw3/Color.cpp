@@ -103,7 +103,7 @@ void Color::printColors()
 {
     for (int i = 0; i < numCountries_; i++)
     {
-        cout << mapColors[i] << endl;
+        cout << char(i+65) << " " << mapColors[i] << endl;
     }
 }
 
@@ -120,7 +120,6 @@ bool Color::isValid()
                     return false;
                 }
             }
-            
         }
     }
     return true;

@@ -1,6 +1,7 @@
   #include <vector>
   #include <string>
   #include <map>
+  #include <algorithm>
 
   template <typename T>
   class MinHeap {
@@ -130,7 +131,7 @@ void MinHeap<T>::trickleDown(int loc)
     it1 = priority_.find(heap[smal]);
     if (it->second > it1->second)
     {
-        swap(heap[loc], heap[smal]);
+        std::swap(heap[loc], heap[smal]);
         trickleDown(smal);
     }
 }
@@ -146,7 +147,7 @@ void MinHeap<T>::trickleUp(int loc)
 
     while((parent >= 0) && (it->second < it1->second))
     {
-        swap(heap[parent], heap[loc]);
+        std::swap(heap[parent], heap[loc]);
         loc = parent;
         parent = (loc-1) / d_;
         it = priority_.find(heap[loc]);
