@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
     map<string, int> fruitSpread; //holds the number of occurances of each fruit
     map<string, vector<string>*>::iterator it;
     string temp1;
-    int total = 0;
+    int total = 0; //holds total number of fruits
     int numFruits;
 
     ifstream train;
@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
                 {
                     int num1 = 0;
                     int num2 = 0;
-                    for (int i = 0; i < it->second->size(); i++)
+                    for (unsigned int i = 0; i < it->second->size(); i++) //check occ(x and Fruit)
                     {
                         if (it->second->at(i) == temp)
                         {
@@ -108,17 +108,17 @@ int main(int argc, char* argv[])
                         }
                     }
 
-                    map<string,int>::iterator it1 = fruitSpread.find(it->first);
-                    egivenf = egivenf * (1+double(num1))/(1+double(it1->second));
+                    map<string,int>::iterator it1 = fruitSpread.find(it->first); //gives occ(Fruit)
+                    egivenf = egivenf * (1+double(num1))/(1+double(it1->second)); //gives occ(x|Fruit) using conditional independence
                     probF = double(it1->second)/double(total);
                     probnotF = 1 - probF;
 
                     map<string, vector<string>*>::iterator it2;
-                    for (it2 = fruits.begin(); it2 != fruits.end(); it2++)
+                    for (it2 = fruits.begin(); it2 != fruits.end(); it2++) //check occ(x and notF)
                     {
                         if (it2->first != it->first)
                         {
-                            for (int j = 0; j < it2->second->size(); j++)
+                            for (unsigned int j = 0; j < it2->second->size(); j++)
                             {
                                 if (it2->second->at(j) == temp)
                                 {
@@ -131,8 +131,8 @@ int main(int argc, char* argv[])
                 }
                 numerator = egivenf * probF;
                 denominator = egivenf * probF + egivennotf * probnotF;
-                answer = numerator/denominator;
-                if (answer > currMax)
+                answer = numerator/denominator; //bayes theorm
+                if (answer > currMax) //for each line of adjectives update the most likely fruit
                 {
                     currMax = answer;
                     theFruit = it->first;
@@ -153,7 +153,7 @@ int main(int argc, char* argv[])
     {
         cout << "Failed to open classify" << endl;
     }
-    for (it = fruits.begin(); it != fruits.end(); it++)
+    for (it = fruits.begin(); it != fruits.end(); it++) //free memory
     {
         delete it->second;
     }
