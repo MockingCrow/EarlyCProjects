@@ -14,13 +14,13 @@ class Hashtable {
     private:
         void resize ();
         int hash (std::string k) const;
-        int hashdos(std::string k, int idx) const;
+        int hashdos(std::string k) const;
         bool debug_;
         unsigned int probing_;
         int m;
         int n;
         int idx;
-        std::pair<std::string, int> **arr;
+        std::pair<std::string, int> **arr = new std::pair<std::string, int>*[11];
 
         int sizes[28] = {11, 23, 47, 97, 197, 397, 797, 1597, 3203, 
         6421, 12853, 25717, 51437, 102877, 205759, 411527, 

@@ -6,17 +6,18 @@
 #include <time.h> 
 #include <fstream>
 #include <cmath> 
+#include <cstring>
+#include <array>
 
 using namespace std;
 
 Hashtable::Hashtable (bool debug, unsigned int probing)
 {
-    debug_ = false;
+    debug_ = true;
     probing_ = 0;
     m = 11;
     n = 0;
     idx = 0;
-    *arr = new pair<string, int>[11];
 }
 
 Hashtable::~Hashtable() {}
@@ -29,12 +30,15 @@ void Hashtable::add (string k)
         if ((double)(n+1)/(double)m > .5) resize();
         if (arr[num] == nullptr)
         {
-            *arr[num] = pair<string, int>(k, 1);
+            pair<string, int>* temp = new pair<string, int>(k, 1);
+            arr[num] = temp;
+            n++;
             return;
         }
         if (arr[num]->first == k)
         {
             ++(arr[num]->second);
+            n++;
             return;
         }
 
@@ -49,7 +53,7 @@ void Hashtable::add (string k)
         }
         else
         {
-            num = (num + i*hashdos(k, idx)) % m;
+            num = (num + i*hashdos(k)) % m;
         }
     }
 }
@@ -73,7 +77,7 @@ int Hashtable::count (string k)
         }
         else
         {
-            num = (num + i*hashdos(k, idx)) % m;
+            num = (num + i*hashdos(k)) % m;
         }
     }
 }
@@ -82,7 +86,11 @@ void Hashtable::reportAll (ostream &) const
 {
     for (int i = 0; i < m; i++)
     {
-        ostream << arr[i]->first << " " << arr[i]->second << "\n";
+        if (arr[i] != nullptr)
+        {
+            cout << arr[i]->first << " " << arr[i]->second << endl;
+        } 
+        //ostream << arr[i]->first << " " << arr[i]->second << "\n";
     }
     
 }
@@ -90,16 +98,24 @@ void Hashtable::reportAll (ostream &) const
 void Hashtable::resize()
 {
     ++idx;
-    *arr = pair<string, int>[sizes[idx]];
+    pair<string, int> **tempArr = new pair<string, int>*[sizes[idx]];
+    copy(arr, arr+sizes[idx-1], tempArr);
+    delete [] arr;
+    arr = tempArr;
     m = sizes[idx];
+
     for (int i = 0; i < sizes[idx-1]; i++)
     {
         if (arr[i] != nullptr)
         {
             string temp = arr[i]->first;
+            int tempNum = arr[i]->second;
             delete arr[i];
             arr[i] = nullptr;
-            add(temp);   
+            for (int j = 0; j < tempNum; j++)
+            {
+                add(temp);   
+            }
         }
     } 
 }
@@ -244,7 +260,7 @@ int Hashtable::hash (string k) const
 }
 
 
-int Hashtable::hashdos(std::string k, int idx) const
+int Hashtable::hashdos(std::string k) const
 {
     int r1, r2, r3, r4, r5;
     int iter = 1;
