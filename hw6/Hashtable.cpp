@@ -24,9 +24,33 @@ Hashtable::~Hashtable() {}
 void Hashtable::add (string k)
 {
     int num = hash(k);
-    if (arr[num]->second == 0)
+    for (int i = 1; i <= m; i++)
     {
-        
+        if ((double)(n+1)/(double)m > .5) resize();
+        if (arr[num] == nullptr)
+        {
+            *arr[num] = pair<string, int>(k, 1);
+            return;
+        }
+        if (arr[num]->first == k)
+        {
+            ++(arr[num]->second);
+            return;
+        }
+
+        if (probing_ == 0)
+        {
+            num++;
+            num = num % m;
+        }
+        else if (probing_ == 1)
+        {
+            num = (num + (i^2)) % m;
+        }
+        else
+        {
+            num = (num + i*hashdos(k, idx)) % m;
+        }
     }
 }
 
@@ -56,12 +80,28 @@ int Hashtable::count (string k)
 
 void Hashtable::reportAll (ostream &) const
 {
-
+    for (int i = 0; i < m; i++)
+    {
+        ostream << arr[i]->first << " " << arr[i]->second << "\n";
+    }
+    
 }
 
 void Hashtable::resize()
 {
-
+    ++idx;
+    *arr = pair<string, int>[sizes[idx]];
+    m = sizes[idx];
+    for (int i = 0; i < sizes[idx-1]; i++)
+    {
+        if (arr[i] != nullptr)
+        {
+            string temp = arr[i]->first;
+            delete arr[i];
+            arr[i] = nullptr;
+            add(temp);   
+        }
+    } 
 }
 
 int Hashtable::hash (string k) const
