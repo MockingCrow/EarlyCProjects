@@ -38,7 +38,6 @@ void Hashtable::add (string k)
         if (arr[num]->first == k)
         {
             ++(arr[num]->second);
-            n++;
             return;
         }
 
@@ -103,6 +102,7 @@ void Hashtable::resize()
     delete [] arr;
     arr = tempArr;
     m = sizes[idx];
+    n = 0;
 
     for (int i = 0; i < sizes[idx-1]; i++)
     {
