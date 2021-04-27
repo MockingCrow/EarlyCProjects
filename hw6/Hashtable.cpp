@@ -13,11 +13,34 @@ using namespace std;
 
 Hashtable::Hashtable (bool debug, unsigned int probing)
 {
-    debug_ = true;
-    probing_ = 0;
+    debug_ = debug;
+    probing_ = probing;
     m = 11;
     n = 0;
     idx = 0;
+    if (debug_ == false)
+    {
+        srand(120239847);
+        r1 = rand() % m;
+        r2 = rand() % m;
+        r3 = rand() % m;
+        r4 = rand() % m;
+        r5 = rand() % m;
+    }
+    else
+    {
+        r1 = 983132572;
+        r2 = 62337998;
+        r3 = 552714139;
+        r4 = 984953261;
+        r5 = 261934300;
+    }
+
+    for (int i = 0; i < sizes[idx]; i++)
+    {
+        pair<string, int>* temp = new pair<string, int>("", 0);
+        arr[i] = temp;
+    }
 }
 
 Hashtable::~Hashtable() {}
@@ -27,8 +50,12 @@ void Hashtable::add (string k)
     int num = hash(k);
     for (int i = 1; i <= m; i++)
     {
-        if ((double)(n+1)/(double)m > .5) resize();
-        if (arr[num] == nullptr)
+        if ((double)(n+1)/(double)m > .5)
+        {
+            resize();
+            num = hash(k);
+        }
+        if (arr[num]->first == "" && arr[num]->second == 0)
         {
             pair<string, int>* temp = new pair<string, int>(k, 1);
             arr[num] = temp;
@@ -79,17 +106,18 @@ int Hashtable::count (string k)
             num = (num + i*hashdos(k)) % m;
         }
     }
+    return -1;
 }
 
-void Hashtable::reportAll (ostream &) const
+void Hashtable::reportAll (ostream& of) const
 {
     for (int i = 0; i < m; i++)
     {
-        if (arr[i] != nullptr)
+        if (arr[i]->first != "" && arr[i]->second != 0)
         {
-            cout << arr[i]->first << " " << arr[i]->second << endl;
+            of << arr[i]->first << " " << arr[i]->second << endl;
         } 
-        //ostream << arr[i]->first << " " << arr[i]->second << "\n";
+        
     }
     
 }
@@ -97,53 +125,62 @@ void Hashtable::reportAll (ostream &) const
 void Hashtable::resize()
 {
     ++idx;
-    pair<string, int> **tempArr = new pair<string, int>*[sizes[idx]];
-    copy(arr, arr+sizes[idx-1], tempArr);
-    delete [] arr;
-    arr = tempArr;
     m = sizes[idx];
-    n = 0;
+    pair<string, int> **tempArr = new pair<string, int>*[sizes[idx]];
+    for (int i = 0; i < sizes[idx]; i++)
+    {
+        pair<string, int>* tempP1 = new pair<string, int>("", 0);
+        tempArr[i] = tempP1;
+    }
 
     for (int i = 0; i < sizes[idx-1]; i++)
     {
-        if (arr[i] != nullptr)
+        if (arr[i]->first != "" && arr[i]->second != 0)
         {
-            string temp = arr[i]->first;
-            int tempNum = arr[i]->second;
-            delete arr[i];
-            arr[i] = nullptr;
-            for (int j = 0; j < tempNum; j++)
+    
+            int num = hash(arr[i]->first);
+            for (int j = 1; j <= m; j++)
             {
-                add(temp);   
+                if (tempArr[num]->first == "" && tempArr[num]->second == 0)
+                {
+                    pair<string, int>* temp = new pair<string, int>(arr[i]->first, arr[i]->second);
+                    tempArr[num] = temp;
+                    break;
+                }
+                else if (tempArr[num]->first == arr[i]->first)
+                {
+                    ++(tempArr[num]->second);
+                    break;
+                }
+
+                if (probing_ == 0)
+                {
+                    num++;
+                    num = num % m;
+                }
+                else if (probing_ == 1)
+                {
+                    num = (num + (i^2)) % m;
+                }
+                else
+                {
+                    num = (num + i*hashdos(arr[i]->first)) % m;
+                }
             }
         }
     } 
+    for (int i = 0; i < sizes[idx-1]; i++)
+    {
+        delete arr[i];
+    }
+    delete [] arr;
+    arr = tempArr;
 }
 
 int Hashtable::hash (string k) const
 {
-    int r1, r2, r3, r4, r5;
     int iter = 1;
     vector<int> w;
-    if (debug_ == false)
-    {
-        srand(120239847);
-        r1 = rand() % m;
-        r2 = rand() % m;
-        r3 = rand() % m;
-        r4 = rand() % m;
-        r5 = rand() % m;
-    }
-    else
-    {
-        r1 = 983132572;
-        r2 = 62337998;
-        r3 = 552714139;
-        r4 = 984953261;
-        r5 = 261934300;
-
-    }
-
     int j = 0;
     int total = 0;
     int start = k.size()-1;
@@ -262,27 +299,8 @@ int Hashtable::hash (string k) const
 
 int Hashtable::hashdos(std::string k) const
 {
-    int r1, r2, r3, r4, r5;
     int iter = 1;
     vector<int> w;
-    if (debug_ == false)
-    {
-        srand(120239847);
-        r1 = rand() % m;
-        r2 = rand() % m;
-        r3 = rand() % m;
-        r4 = rand() % m;
-        r5 = rand() % m;
-    }
-    else
-    {
-        r1 = 983132572;
-        r2 = 62337998;
-        r3 = 552714139;
-        r4 = 984953261;
-        r5 = 261934300;
-    }
-
     int j = 0;
     int total = 0;
     int start = k.size()-1;

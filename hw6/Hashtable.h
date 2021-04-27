@@ -20,6 +20,7 @@ class Hashtable {
         int m;
         int n;
         int idx;
+        int r1, r2, r3, r4, r5;
         std::pair<std::string, int> **arr = new std::pair<std::string, int>*[11];
 
         int sizes[28] = {11, 23, 47, 97, 197, 397, 797, 1597, 3203, 
