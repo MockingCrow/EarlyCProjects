@@ -43,7 +43,13 @@ Hashtable::Hashtable (bool debug, unsigned int probing)
     }
 }
 
-Hashtable::~Hashtable() {}
+Hashtable::~Hashtable() {
+    for (int i = 0; i < sizes[idx-1]; i++)
+    {
+        delete arr[i];
+    }
+    delete [] arr;
+}
 
 void Hashtable::add (string k)
 {

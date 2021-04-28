@@ -19,9 +19,10 @@ int main(int argc, char *argv[]) {
         cout << "Wrong Number of Arguments" << endl;
         return -1;
     }
-    int x = argv[3];
-    int d = argv[4];
-    int r = argv[5];
+    int x = (int)*argv[3]-48;
+    int d = (int)*argv[4]-48;
+    int r = (int)*argv[5]-48;
+    ifstream f;
     f.open(argv[1]);
     if (f.fail())
     {
@@ -33,7 +34,7 @@ int main(int argc, char *argv[]) {
     vector<string> words;
     while (f >> temp)
     {
-        for (int i = 0; i < temp.size(); i++)
+        for (unsigned int i = 0; i < temp.size(); i++)
         {
             if (!isalpha(temp[i]))
             {
@@ -47,34 +48,33 @@ int main(int argc, char *argv[]) {
     start = clock();
 
     /* Your algorithm here */
-    map<string, int> wordMap;
-    Hashtable *table = new Hashtable(d, x);
-    if (x == 3)
+    
+    for (int i = 0; i < r; i++)
     {
-        for (int i = 0; i < r; i++)
+        map<string, int> *wordMap = new map<string, int>();
+        Hashtable *table = new Hashtable((bool)d, x);
+        if (x == 3)
         {
-            for (int j = 0; j < words.size(); j++)
+            for (unsigned int j = 0; j < words.size(); j++)
             {
-                wordMap.insert(words[j]);
+                wordMap->insert(make_pair(words[j], 1));
             }
         }
-    }
-    else
-    {
-        for (int i = 0; i < r; i++)
+        else
         {
-            for (int j = 0; j < words.size(); j++)
+            for (unsigned int j = 0; j < words.size(); j++)
             {
                 table->add(words[j]);
             }
         }
     }
     
-
     duration = ( clock() - start ) / (double) CLOCKS_PER_SEC;
 
     std::cout << duration/r << endl;
-    of.open(argv[2])
+
+    ofstream of;
+    of.open(argv[2]);
     if (of.fail())
     {
         cout << "Failed to Open Output File" << endl;
@@ -83,14 +83,24 @@ int main(int argc, char *argv[]) {
     of << "Time: " << duration/r << endl;
     if (x == 3)
     {
+        map<string, int> *wordMap = new map<string, int>();
+        for (unsigned int j = 0; j < words.size(); j++)
+        {
+            wordMap->insert(make_pair(words[j], 1));
+        }
         map<string, int>::iterator it;
-        for (it = wordMap.begin(); it != wordMap.end(); it++)
+        for (it = wordMap->begin(); it != wordMap->end(); it++)
         {
             of << it->first << " " << it->second << endl;
         }
     }
     else
     {
+        Hashtable *table = new Hashtable((bool)d, x);
+        for (unsigned int j = 0; j < words.size(); j++)
+        {
+            table->add(words[j]);
+        }
         table->reportAll(of);
     }
 }
