@@ -35,19 +35,15 @@ Hashtable::Hashtable (bool debug, unsigned int probing)
         r4 = 984953261;
         r5 = 261934300;
     }
-
-    for (int i = 0; i < sizes[idx]; i++)
+    arr = new std::pair<std::string, int>[11];
+    for (int i = 0; i < 11; i++)
     {
-        pair<string, int>* temp = new pair<string, int>("", 0);
+        pair<string, int> temp = make_pair("", 0); 
         arr[i] = temp;
     }
 }
 
 Hashtable::~Hashtable() {
-    for (int i = 0; i < sizes[idx-1]; i++)
-    {
-        delete arr[i];
-    }
     delete [] arr;
 }
 
@@ -61,16 +57,16 @@ void Hashtable::add (string k)
             resize();
             num = hash(k);
         }
-        if (arr[num]->first == "" && arr[num]->second == 0)
+        if (arr[num].first == "" && arr[num].second == 0)
         {
-            pair<string, int>* temp = new pair<string, int>(k, 1);
+            pair<string, int> temp = make_pair(k, 1);
             arr[num] = temp;
             n++;
             return;
         }
-        if (arr[num]->first == k)
+        if (arr[num].first == k)
         {
-            ++(arr[num]->second);
+            ++(arr[num].second);
             return;
         }
 
@@ -95,8 +91,8 @@ int Hashtable::count (string k)
     int num = hash(k);
     for (int i = 1; i <= m; i++)
     {
-        if (arr[num] == nullptr) return 0;
-        if (arr[num]->first == k) return arr[num]->second;
+        if (arr[num].first == "" && arr[num].second == 0) return 0;
+        if (arr[num].first == k) return arr[num].second;
 
         if (probing_ == 0)
         {
@@ -119,9 +115,9 @@ void Hashtable::reportAll (ostream& of) const
 {
     for (int i = 0; i < m; i++)
     {
-        if (arr[i]->first != "" && arr[i]->second != 0)
+        if (arr[i].first != "" && arr[i].second != 0)
         {
-            of << arr[i]->first << " " << arr[i]->second << endl;
+            of << arr[i].first << " " << arr[i].second << endl;
         } 
         
     }
@@ -132,30 +128,30 @@ void Hashtable::resize()
 {
     ++idx;
     m = sizes[idx];
-    pair<string, int> **tempArr = new pair<string, int>*[sizes[idx]];
+    pair<string, int> *tempArr = new pair<string, int>[sizes[idx]];
     for (int i = 0; i < sizes[idx]; i++)
     {
-        pair<string, int>* tempP1 = new pair<string, int>("", 0);
+        pair<string, int> tempP1 = make_pair("", 0);
         tempArr[i] = tempP1;
     }
 
     for (int i = 0; i < sizes[idx-1]; i++)
     {
-        if (arr[i]->first != "" && arr[i]->second != 0)
+        if (arr[i].first != "" && arr[i].second != 0)
         {
     
-            int num = hash(arr[i]->first);
+            int num = hash(arr[i].first);
             for (int j = 1; j <= m; j++)
             {
-                if (tempArr[num]->first == "" && tempArr[num]->second == 0)
+                if (tempArr[num].first == "" && tempArr[num].second == 0)
                 {
-                    pair<string, int>* temp = new pair<string, int>(arr[i]->first, arr[i]->second);
+                    pair<string, int> temp = make_pair(arr[i].first, arr[i].second);
                     tempArr[num] = temp;
                     break;
                 }
-                else if (tempArr[num]->first == arr[i]->first)
+                else if (tempArr[num].first == arr[i].first)
                 {
-                    ++(tempArr[num]->second);
+                    ++(tempArr[num].second);
                     break;
                 }
 
@@ -170,15 +166,11 @@ void Hashtable::resize()
                 }
                 else
                 {
-                    num = (num + i*hashdos(arr[i]->first)) % m;
+                    num = (num + i*hashdos(arr[i].first)) % m;
                 }
             }
         }
     } 
-    for (int i = 0; i < sizes[idx-1]; i++)
-    {
-        delete arr[i];
-    }
     delete [] arr;
     arr = tempArr;
 }

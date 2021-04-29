@@ -51,20 +51,28 @@ int main(int argc, char *argv[]) {
     
     for (int i = 0; i < r; i++)
     {
-        map<string, int> *wordMap = new map<string, int>();
-        Hashtable *table = new Hashtable((bool)d, x);
+        map<string, int> wordMap;
+        Hashtable table((bool)d, x);
         if (x == 3)
         {
             for (unsigned int j = 0; j < words.size(); j++)
             {
-                wordMap->insert(make_pair(words[j], 1));
+                map<string, int>::iterator it = wordMap.find(words[j]);
+                if (it == wordMap.end())
+                {
+                    wordMap.insert(make_pair(words[j], 1));
+                }
+                else
+                {
+                    ++(it->second);
+                }
             }
         }
         else
         {
             for (unsigned int j = 0; j < words.size(); j++)
             {
-                table->add(words[j]);
+                table.add(words[j]);
             }
         }
     }
@@ -83,24 +91,24 @@ int main(int argc, char *argv[]) {
     of << "Time: " << duration/r << endl;
     if (x == 3)
     {
-        map<string, int> *wordMap = new map<string, int>();
+        map<string, int> wordMap;
         for (unsigned int j = 0; j < words.size(); j++)
         {
-            wordMap->insert(make_pair(words[j], 1));
+            wordMap.insert(make_pair(words[j], 1));
         }
         map<string, int>::iterator it;
-        for (it = wordMap->begin(); it != wordMap->end(); it++)
+        for (it = wordMap.begin(); it != wordMap.end(); it++)
         {
             of << it->first << " " << it->second << endl;
         }
     }
     else
     {
-        Hashtable *table = new Hashtable((bool)d, x);
+        Hashtable table(bool(d), x);
         for (unsigned int j = 0; j < words.size(); j++)
         {
-            table->add(words[j]);
+            table.add(words[j]);
         }
-        table->reportAll(of);
+        table.reportAll(of);
     }
 }
