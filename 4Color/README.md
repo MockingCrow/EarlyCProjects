@@ -4,8 +4,11 @@ Each letter is a country and each country must be contigous (diagonals don't cou
 
 6 4 8 
 FFFFFFFF
+
 FEEEDDDF
+
 FAABBCCF
+
 FFFFFFFF
 
 Color the map using "make" which produces an executable named coloring. Do "./coloring inputfile" to run the program. 
