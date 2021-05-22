@@ -2,7 +2,7 @@ Program based on the 4 color theorm, takes an input file in the format below.
 The numbers at the top go, number of countries, rows, cols, respectively
 Each letter is a country and each country must be contigous (diagonals don't count).
 
-6 4 8 
+6 4 8                                                
 FFFFFFFF                                       
 FEEEDDDF                    
 FAABBCCF                
