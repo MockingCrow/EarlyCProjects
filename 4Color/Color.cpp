@@ -89,7 +89,7 @@ Color::Color(int rows, int cols, int numCountries, char **input)
             }
         }
     }
-    int stop = 1;
+   
 }
 
 Color::~Color() {}
