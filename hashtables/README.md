@@ -1,5 +1,7 @@
 RUN INSTRUCTIONS:
-Type "make" to run the basic hashtable without timing (creates an executable called "hash".
+Type "make" to run the basic hashtable without timing (creates an executable called "hash". The hash table takes in 
+2 arguments, a boolean and a int. Setting the boolean to true enables the debug mode. The int controls the hash 
+probing: 0 mean linear probing, 1 means quadratic probing and 2 means double hashing.
 main.cpp is where the generic main function is located, feel free to alter what is considered the "main".
 
 Type "make counting" to create an executable called "counting" which times the code as well as outputs
