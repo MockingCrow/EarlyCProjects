@@ -54,11 +54,11 @@ int main(int argc, char* argv[])
             {
                 vector<string> *vec = new vector<string>; //populate fruits
                 fruits.insert(make_pair(name, vec));
-            }
-            while (ss>>temp)
-            {
-                it = fruits.find(name); //populate array of adjs
-                it->second->push_back(temp);
+                while (ss>>temp)
+                {
+                    it = fruits.find(name); //populate array of adjs
+                    it->second->push_back(temp);
+                }
             }
         }
     }

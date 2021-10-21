@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     clock_t start;
     double duration;
 
-    /* Preprocessing here that you don't want to time */
+    /* Preprocessing */
     if (argc != 6)
     {
         cout << "Wrong Number of Arguments" << endl;
@@ -47,8 +47,7 @@ int main(int argc, char *argv[]) {
 
     start = clock();
 
-    /* Your algorithm here */
-    
+    /*Timing Start*/
     for (int i = 0; i < r; i++)
     {
         map<string, int> wordMap;
