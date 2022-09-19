@@ -13,6 +13,8 @@ probing 2 means double hashing and 3 means using a map. When b = true the debug 
 seeding becomes constant. The int "r" stands for the number of repeats the counting program goes through before 
 averaging the times to allow for greater accuracy.
 
+EX: ./counting i b r
+
 
 Example results of 3 input cases of sizes 250, 2,500 and 30,000 (Shakespear's Hamlet).
 
